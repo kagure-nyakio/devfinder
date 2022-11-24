@@ -21,10 +21,17 @@ defmodule Devfinder.Core.Dev do
     avatar_url: String.t,
     name: String.t,
     login: String.t,
+<<<<<<< HEAD
     github_link: String.t,
     joined: String.t,
     bio: String.t,
     repos: integer,
+=======
+    github_url: String.t,
+    joined_on: String.t,
+    bio: String.t,
+    public_repos: integer,
+>>>>>>> af5f267 (Adding logic to fetch developer information)
     followers: integer,
     following: integer,
     twitter_username: String.t,
@@ -32,7 +39,11 @@ defmodule Devfinder.Core.Dev do
     company: String.t
   }
 
+<<<<<<< HEAD
   defstruct ~w[avatar_url name login github_link joined bio repos followers following twitter_username blog company]a
+=======
+  defstruct ~w[avatar_url name login github_url joined_on bio public_repos followers following twitter_username blog company]a
+>>>>>>> af5f267 (Adding logic to fetch developer information)
 
   @spec find_dev(String.t) :: t
   def find_dev(username) do
@@ -63,6 +74,7 @@ defmodule Devfinder.Core.Dev do
     body |> Jason.decode!()
   end
 
+<<<<<<< HEAD
   #find a better way to do this
   def filter_info(result) do
     %__MODULE__{
@@ -79,6 +91,35 @@ defmodule Devfinder.Core.Dev do
       blog: result["blog"],
       company: result["company"]
     }
+=======
+  defp filter_info(%{
+    "avatar_url"=> avatar_url, 
+    "name" => name, 
+    "login"=> login, 
+    "html_url" => html_url, 
+    "created_at" => created_at, 
+    "bio" => bio, 
+    "public_repos" => public_repos, 
+    "followers" => followers, 
+    "following" => following,
+    "twitter_username" => twitter_username, 
+    "company" => company, 
+    "blog" => blog}) do
+      %__MODULE__{
+        avatar_url: avatar_url,
+        name: name,
+        login: login,
+        github_url: html_url,
+        joined_on: parse_date(created_at),
+        bio: bio,
+        public_repos: public_repos,
+        followers: followers,
+        following: following,
+        twitter_username: twitter_username,
+        blog: blog,
+        company: company 
+      }
+>>>>>>> af5f267 (Adding logic to fetch developer information)
   end
 
   defp parse_date(date_joined) do
