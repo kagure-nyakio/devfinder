@@ -1,18 +1,8 @@
 defmodule Devfinder do
-  @moduledoc """
-  Documentation for `Devfinder`.
-  """
+  alias Devfinder.Core.Dev
 
-  @doc """
-  Hello world.
+  @opaque dev :: Dev.t
 
-  ## Examples
-
-      iex> Devfinder.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
-end
+  @spec find_dev(String.t) :: dev
+  defdelegate find_dev(username), to: Dev
+ end
