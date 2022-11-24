@@ -25,9 +25,4 @@ defmodule Devfinder.Runtime.Application do
       }
     }
   end
-<<<<<<< HEAD
-
-
-=======
->>>>>>> af5f267 (Adding logic to fetch developer information)
 end

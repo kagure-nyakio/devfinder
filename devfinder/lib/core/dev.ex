@@ -21,17 +21,10 @@ defmodule Devfinder.Core.Dev do
     avatar_url: String.t,
     name: String.t,
     login: String.t,
-<<<<<<< HEAD
     github_link: String.t,
     joined: String.t,
     bio: String.t,
-    repos: integer,
-=======
-    github_url: String.t,
-    joined_on: String.t,
-    bio: String.t,
     public_repos: integer,
->>>>>>> af5f267 (Adding logic to fetch developer information)
     followers: integer,
     following: integer,
     twitter_username: String.t,
@@ -39,11 +32,7 @@ defmodule Devfinder.Core.Dev do
     company: String.t
   }
 
-<<<<<<< HEAD
-  defstruct ~w[avatar_url name login github_link joined bio repos followers following twitter_username blog company]a
-=======
   defstruct ~w[avatar_url name login github_url joined_on bio public_repos followers following twitter_username blog company]a
->>>>>>> af5f267 (Adding logic to fetch developer information)
 
   @spec find_dev(String.t) :: t
   def find_dev(username) do
@@ -74,24 +63,6 @@ defmodule Devfinder.Core.Dev do
     body |> Jason.decode!()
   end
 
-<<<<<<< HEAD
-  #find a better way to do this
-  def filter_info(result) do
-    %__MODULE__{
-      avatar_url: result["avatar_url"],
-      name: result["name"],
-      login: result["login"],
-      github_link: result["html_url"],
-      joined: parse_date(result["created_at"]),
-      bio: result["bio"],
-      repos: result["public_repos"],
-      followers: result["followers"],
-      following: result["following"],
-      twitter_username: result["twitter_username"],
-      blog: result["blog"],
-      company: result["company"]
-    }
-=======
   defp filter_info(%{
     "avatar_url"=> avatar_url, 
     "name" => name, 
@@ -119,7 +90,6 @@ defmodule Devfinder.Core.Dev do
         blog: blog,
         company: company 
       }
->>>>>>> af5f267 (Adding logic to fetch developer information)
   end
 
   defp parse_date(date_joined) do
