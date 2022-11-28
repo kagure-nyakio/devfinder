@@ -34,7 +34,7 @@ defmodule Devfinder.Core.Dev do
 
   defstruct ~w[avatar_url name login github_url joined_on bio public_repos followers following twitter_username blog company]a
 
-  @spec find_dev(String.t) :: t
+  @spec find_dev(String.t) :: { :ok, t } | { :error, { integer, String.t } }
   def find_dev(username) do
     username
     |> request_dev_info
@@ -48,47 +48,41 @@ defmodule Devfinder.Core.Dev do
   end
 
   defp handle_response({:ok, %Response{body: body, status: 200}}) do
-    body
-    |> parse_body
-    |> filter_info
+    response =
+      body
+      |> parse_body
+      |> filter_info
+   
+    { :ok, response }
   end
   
-  defp handle_response({:ok, %Response{body: body}}) do
-    body
-    |> parse_body
-    |> Map.get("message")
+  defp handle_response({:ok, %Response{body: body, status: status}}) when status > 400 do
+    message =
+      body
+      |> parse_body
+      |> Map.get("message")
+
+    { :error, {status, message} }
   end
 
   defp parse_body(body) do
     body |> Jason.decode!()
   end
 
-  defp filter_info(%{
-    "avatar_url"=> avatar_url, 
-    "name" => name, 
-    "login"=> login, 
-    "html_url" => html_url, 
-    "created_at" => created_at, 
-    "bio" => bio, 
-    "public_repos" => public_repos, 
-    "followers" => followers, 
-    "following" => following,
-    "twitter_username" => twitter_username, 
-    "company" => company, 
-    "blog" => blog}) do
+  defp filter_info(resp) do
       %__MODULE__{
-        avatar_url: avatar_url,
-        name: name,
-        login: login,
-        github_url: html_url,
-        joined_on: parse_date(created_at),
-        bio: bio,
-        public_repos: public_repos,
-        followers: followers,
-        following: following,
-        twitter_username: twitter_username,
-        blog: blog,
-        company: company 
+        avatar_url: resp["avatar_url"],
+        name: resp["name"],
+        login: resp["login"],
+        github_url: resp["html_url"],
+        joined_on: parse_date(resp["created_at"]),
+        bio: resp["bio"],
+        public_repos: resp["public_repos"],
+        followers: resp["followers"],
+        following: resp["following"],
+        twitter_username: resp["twitter_username"],
+        blog: resp["blog"],
+        company: resp["company"] 
       }
   end
 
@@ -103,4 +97,6 @@ defmodule Devfinder.Core.Dev do
     |> Enum.reverse
     |> Enum.join(" ")
   end
+
+  #dealing with nil values?? or should this happen in the UI?
 end
