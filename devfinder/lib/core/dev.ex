@@ -1,4 +1,6 @@
 defmodule Devfinder.Core.Dev do
+  @behaviour Devfinder.Core.ApiClientBehaviour 
+
   alias Finch.Response
 
   @base_url "https://api.github.com/users/"
@@ -72,17 +74,17 @@ defmodule Devfinder.Core.Dev do
   defp filter_info(resp) do
       %__MODULE__{
         avatar_url: resp["avatar_url"],
-        name: resp["name"],
+        name: parse_empty_values(resp["name"], "Not set"),
         login: resp["login"],
         github_url: resp["html_url"],
         joined_on: parse_date(resp["created_at"]),
-        bio: resp["bio"],
+        bio: parse_empty_values(resp["bio"], "This profile has no bio"),
         public_repos: resp["public_repos"],
         followers: resp["followers"],
         following: resp["following"],
-        twitter_username: resp["twitter_username"],
-        blog: resp["blog"],
-        company: resp["company"] 
+        twitter_username: parse_empty_values(resp["twitter_username"], "Not Available"),
+        blog: parse_empty_values(resp["blog"], "Not Available"),
+        company: parse_empty_values(resp["company"], "Not Available")
       }
   end
 
@@ -98,5 +100,7 @@ defmodule Devfinder.Core.Dev do
     |> Enum.join(" ")
   end
 
-  #dealing with nil values?? or should this happen in the UI?
+  defp parse_empty_values(value, message) when is_nil(value) or value == "", do: message
+
+  defp parse_empty_values(value, _message), do: value
 end
