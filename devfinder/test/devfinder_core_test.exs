@@ -4,22 +4,25 @@ defmodule DevfinderCoreTest do
 
   alias Devfinder.Core.Dev
 
-  @resp %Devfinder.Core.Dev{
+  @resp %{
    avatar_url: "https://avatars.githubusercontent.com/u/26466961?v=4",
    bio: "This profile has no bio",
    blog: "Not Available",
    company: "Not Available",
    followers: 0,
    following: 0,
-   github_url: "https://github.com/nyakio-muriuki",
-   joined_on: "16 Mar 2017",
+   html_url: "https://github.com/nyakio-muriuki",
+   created_at: "16 Mar 2017",
    login: "nyakio-muriuki",
    name: "Not set",
    public_repos: 4,
    twitter_username: "Not Available"
  }
 
-  @error {:error, {404, "Not Found"}}
+  @error_resp %{
+    status: 404, 
+    message: "Not Found"
+  }
   
   describe "find_dev/1" do
     test "successfully fetches developer's information given a username" do
@@ -33,8 +36,7 @@ defmodule DevfinderCoreTest do
        }}
       end)
 
-      result = {:ok, @resp}
-      assert result == Dev.find_dev("nyakio-muriuki")
+      assert @resp == Dev.find_dev("nyakio-muriuki")
     end
 
     test "returns error message for developers not found" do
@@ -46,7 +48,7 @@ defmodule DevfinderCoreTest do
           status: 404
         }}
       end)
-      assert @error == Dev.find_dev("nyakio-muriuk")
+      assert @error_resp == Dev.find_dev("nyakio-muriuk")
     end
   end
 end
