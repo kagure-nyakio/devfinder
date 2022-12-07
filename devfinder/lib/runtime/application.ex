@@ -1,4 +1,5 @@
 defmodule Devfinder.Runtime.Application do
+  #Supervisor -> DynamicSupervisor ->  Finch workers to make requesr
   @moduledoc false
 
   @req_pool_size 25
@@ -7,13 +8,21 @@ defmodule Devfinder.Runtime.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
+    spec = [
+      {
+        DynamicSupervisor, strategy: :one_for_one, name: ClientStarter
+      },
       finch_child_spec()
     ]
 
-    opts = [strategy: :one_for_one, name: Devfinder.Supervisor]
+    opts = [strategy: :one_for_one]
 
-    Supervisor.start_link(children, opts)
+    Supervisor.start_link(spec, opts)
+  end
+
+  def start_client do
+    DynamicSupervisor.start_child(ClientStarter, {Devfinder.Runtime.Server, nil})
+
   end
 
   defp finch_child_spec do

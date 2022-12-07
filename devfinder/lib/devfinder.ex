@@ -1,7 +1,21 @@
 defmodule Devfinder do
-  alias Devfinder.Core.Dev
+  alias Devfinder.Runtime.Server
   alias Devfinder.Type
 
-  @spec find_dev(String.t) :: Type.user_info | Type.github_error
-  defdelegate find_dev(username), to: Dev
+  @opaque client  :: Server.t
+  @type user_info :: Type.user_info
+  @type error     :: Type.github_error
+
+  #start with a supervisor
+ @spec start_client() :: client
+ def start_client do
+   { :ok, client } = Devfinder.Runtime.Application.start_client
+   client
+ end
+
+  @spec find_dev(pid, String.t) :: user_info | error
+  def find_dev(client, username) do
+    GenServer.call(client, { :find_dev, username })
+  end
+  
  end
