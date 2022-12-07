@@ -1,5 +1,4 @@
 defmodule Devfinder.Runtime.Application do
-  #Supervisor -> DynamicSupervisor ->  Finch workers to make requesr
   @moduledoc false
 
   @req_pool_size 25
