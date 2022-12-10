@@ -7,21 +7,9 @@ defmodule Devfinder.Runtime.Application do
 
   @impl true
   def start(_type, _args) do
-    spec = [
-      {
-        DynamicSupervisor, strategy: :one_for_one, name: ClientStarter
-      },
-      finch_child_spec()
-    ]
+    child_spec = [ finch_child_spec() ]
 
-    opts = [strategy: :one_for_one]
-
-    Supervisor.start_link(spec, opts)
-  end
-
-  def start_client do
-    DynamicSupervisor.start_child(ClientStarter, {Devfinder.Runtime.Server, nil})
-
+    Supervisor.start_link(child_spec, strategy: :one_for_one, name: Devfinder.Supervisor)
   end
 
   defp finch_child_spec do
