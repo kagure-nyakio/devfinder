@@ -8,10 +8,7 @@ defmodule Devfinder.Runtime.Application do
   @impl true
   def start(_type, _args) do
     child_spec = [ 
-      finch_child_spec(),
-      {
-        DynamicSupervisor, strategy: :one_for_one, name: ClientSupervisor
-      }
+      finch_child_spec()
     ]
 
     opts = [
