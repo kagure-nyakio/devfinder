@@ -35,11 +35,6 @@ defmodule Devfinder.Runtime.Server do
     { :reply, resp, devinfo }
   end
 
-  def handle_info(:boom, state) do
-    raise "Crashed!"
-    {:no_reply, state}
-  end
-
    defp client_resp({:ok, resp}) do
      %{
        avatar_url: resp.avatar_url,
