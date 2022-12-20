@@ -1,27 +1,25 @@
 defmodule Devfinder.Runtime.Application do
   @moduledoc false
 
-  @req_pool_size 25
+  @req_pool_size 50
 
   use Application
 
   @impl true
   def start(_type, _args) do
-    spec = [
+    child_spec = [ 
+      finch_child_spec(),
       {
-        DynamicSupervisor, strategy: :one_for_one, name: ClientStarter
-      },
-      finch_child_spec()
+        DynamicSupervisor, strategy: :one_for_one, name: ClientSupervisor
+      }
     ]
 
-    opts = [strategy: :one_for_one]
-
-    Supervisor.start_link(spec, opts)
-  end
-
-  def start_client do
-    DynamicSupervisor.start_child(ClientStarter, {Devfinder.Runtime.Server, nil})
-
+    opts = [
+      name: DevfinderClient.Supervisor,
+      strategy: :one_for_one
+    ]
+  
+    Supervisor.start_link(child_spec,  opts)
   end
 
   defp finch_child_spec do
@@ -32,5 +30,12 @@ defmodule Devfinder.Runtime.Application do
         "https://api.github.com" => [size: @req_pool_size]
       }
     }
+  end
+
+  def start_client() do
+    DynamicSupervisor.start_child(
+      ClientSupervisor,
+      { Devfinder.Runtime.Server, nil}
+    )
   end
 end

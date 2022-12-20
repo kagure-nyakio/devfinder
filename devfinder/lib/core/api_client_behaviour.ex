@@ -1,7 +1,6 @@
 defmodule Devfinder.Core.ApiClientBehaviour do
-  alias Devfinder.Type
-
   @moduledoc false
+
   @callback find_dev(username :: String.t()) :: 
-    Type.user_info | Type.github_error
+  {:ok, Devfinder.Core.Dev.t} | {:error, String.t}
 end

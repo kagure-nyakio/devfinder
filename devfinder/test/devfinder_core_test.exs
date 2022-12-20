@@ -4,25 +4,24 @@ defmodule DevfinderCoreTest do
 
   alias Devfinder.Core.Dev
 
-  @resp %{
-   avatar_url: "https://avatars.githubusercontent.com/u/26466961?v=4",
-   bio: "This profile has no bio",
-   blog: "Not Available",
-   company: "Not Available",
-   followers: 0,
-   following: 0,
-   html_url: "https://github.com/nyakio-muriuki",
-   created_at: "16 Mar 2017",
-   login: "nyakio-muriuki",
-   name: "Not set",
-   public_repos: 4,
-   twitter_username: "Not Available"
- }
+  @resp { 
+   :ok,
+   %Devfinder.Core.Dev{
+    avatar_url: "https://avatars.githubusercontent.com/u/98824439?v=4",
+    bio: "I am a developer who really enjoys puzzles and having fun solving everyday problems.",
+    blog: "",
+    company: nil,
+    created_at: "2022-02-01T13:52:24Z",
+    followers: 0,
+    following: 3,
+    html_url: "https://github.com/kagure-nyakio",
+    login: "kagure-nyakio",
+    name: "Nyakio Muriuki J",
+    public_repos: 36,
+    twitter_username: "nyakio_muriuki"
+ }}
 
-  @error_resp %{
-    status: 404, 
-    message: "Not Found"
-  }
+  @error_resp {:error, "Not Found"}
   
   describe "find_dev/1" do
     test "successfully fetches developer's information given a username" do
@@ -31,12 +30,12 @@ defmodule DevfinderCoreTest do
         {
           :ok,
           %Finch.Response{
-            body: "{\"login\":\"nyakio-muriuki\",\"id\":26466961,\"node_id\":\"MDQ6VXNlcjI2NDY2OTYx\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/26466961?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/nyakio-muriuki\",\"html_url\":\"https://github.com/nyakio-muriuki\",\"followers_url\":\"https://api.github.com/users/nyakio-muriuki/followers\",\"following_url\":\"https://api.github.com/users/nyakio-muriuki/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/nyakio-muriuki/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/nyakio-muriuki/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/nyakio-muriuki/subscriptions\",\"organizations_url\":\"https://api.github.com/users/nyakio-muriuki/orgs\",\"repos_url\":\"https://api.github.com/users/nyakio-muriuki/repos\",\"events_url\":\"https://api.github.com/users/nyakio-muriuki/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/nyakio-muriuki/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":null,\"company\":null,\"blog\":\"\",\"location\":null,\"email\":null,\"hireable\":null,\"bio\":null,\"twitter_username\":null,\"public_repos\":4,\"public_gists\":0,\"followers\":0,\"following\":0,\"created_at\":\"2017-03-16T17:41:23Z\",\"updated_at\":\"2017-04-26T12:23:46Z\"}",
+            body: "{\"login\":\"kagure-nyakio\",\"id\":98824439,\"node_id\":\"U_kgDOBePw9w\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/98824439?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/kagure-nyakio\",\"html_url\":\"https://github.com/kagure-nyakio\",\"followers_url\":\"https://api.github.com/users/kagure-nyakio/followers\",\"following_url\":\"https://api.github.com/users/kagure-nyakio/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/kagure-nyakio/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/kagure-nyakio/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/kagure-nyakio/subscriptions\",\"organizations_url\":\"https://api.github.com/users/kagure-nyakio/orgs\",\"repos_url\":\"https://api.github.com/users/kagure-nyakio/repos\",\"events_url\":\"https://api.github.com/users/kagure-nyakio/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/kagure-nyakio/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"Nyakio Muriuki J\",\"company\":null,\"blog\":\"\",\"location\":\"Nairobi | Kenya\",\"email\":null,\"hireable\":null,\"bio\":\"I am a developer who really enjoys puzzles and having fun solving everyday problems.\",\"twitter_username\":\"nyakio_muriuki\",\"public_repos\":36,\"public_gists\":0,\"followers\":0,\"following\":3,\"created_at\":\"2022-02-01T13:52:24Z\",\"updated_at\":\"2022-11-23T05:17:13Z\"}",
             status: 200
        }}
       end)
 
-      assert @resp == Dev.find_dev("nyakio-muriuki")
+      assert @resp == Dev.find_dev("kagure-nyakio")
     end
 
     test "returns error message for developers not found" do
@@ -48,7 +47,7 @@ defmodule DevfinderCoreTest do
           status: 404
         }}
       end)
-      assert @error_resp == Dev.find_dev("nyakio-muriuk")
+      assert @error_resp == Dev.find_dev("kagure-nyak")
     end
   end
 end
