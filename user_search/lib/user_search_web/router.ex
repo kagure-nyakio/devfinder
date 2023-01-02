@@ -17,7 +17,7 @@ defmodule UserSearchWeb.Router do
   scope "/", UserSearchWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    live "/", SearchLive
   end
 
   # Other scopes may use custom stacks.
