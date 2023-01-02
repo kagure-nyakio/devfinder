@@ -53,6 +53,7 @@ defmodule Devfinder.Core.Dev do
     { :error, message }
   end
 
+
   defp parse_body(body) do
     body |> Jason.decode!()
   end
