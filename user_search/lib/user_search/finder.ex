@@ -51,7 +51,6 @@ defmodule UserSearch.Profile do
     |> put_change(field, "Not Available")
   end
 
-  # {:error, "Not found"}
   def get_dev_profile(username) do
     changeset = 
       username
@@ -62,9 +61,11 @@ defmodule UserSearch.Profile do
       profile = apply_changes(changeset)
       { :ok, profile }
     else 
-      changeset = %{ changeset | action: :get_profile }
+      changeset = 
+        changeset
+        |> add_error(:profile, "No results")
 
-      { :error, changeset }
+      { :error, %{ changeset | action: :get_profile } }
     end
   end
 end
