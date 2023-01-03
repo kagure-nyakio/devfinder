@@ -1,0 +1,49 @@
+<div>
+	<.form
+			let={f}
+		  for={@changeset},
+		  id="search-form"
+      as = "username" 
+		  phx-change="validate"
+      phx-submit="search">   
+      
+      <%= text_input f, :username, phx_debounce: "blur" %>
+      <%= error_tag f, :username %>
+
+      <%= submit "Search", phx_disable_with: "Searching..." %>
+    </.form>
+</div>
+
+<div class="profile">
+	<div>
+		<img src={@dev_profile.avatar_url} alt="">
+	</div>
+	<div>
+		<h2><%= @dev_profile.name || "Not Available" %> </h2>
+		<p><a href={@dev_profile.html_url}><%= @dev_profile.login %></a></p>
+		<p> <%= @dev_profile.bio || "This profile has no bio" %></p>
+
+		<div class="dflex">
+			<p>
+			Repos
+				<span> <%= @dev_profile.public_repos %></span>
+			</p>
+			<p>
+				Followers
+				<span><%= @dev_profile.followers %></span>
+			</p>
+			<p>
+				Following
+				<span> <%= @dev_profile.following %></span>
+			</p>
+		</div>
+
+		<div class="cols">
+			<p><%= @dev_profile.location || "Not Available" %></p>
+			<p><%= @dev_profile.blog || "Not Available" %></p>
+			<p><%= @dev_profile.twitter_username || "Not Available" %></p>
+			<p><%= @dev_profile.company || "Not Available" %></p>
+		</div>
+	</div>
+</div>
+

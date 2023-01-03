@@ -1,5 +1,5 @@
 defmodule Devfinder.Type do
-  @type user_info :: %{
+  @type dev_profile :: %{
     avatar_url: String.t,
     name: String.t,
     login: String.t,
@@ -11,13 +11,10 @@ defmodule Devfinder.Type do
     following: integer,
     twitter_username: String.t,
     blog: String.t,
-    company: String.t
+    company: String.t,
+    location: String.t
   }
 
-  @type github_error :: %{
-      status: integer,
-      message: String.t
-  }
-
+  @type github_error :: %{ error: String.t }
 end
 

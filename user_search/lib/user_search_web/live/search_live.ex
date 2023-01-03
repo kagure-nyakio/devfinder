@@ -7,41 +7,16 @@ defmodule UserSearchWeb.SearchLive do
     { :ok,
       socket
       |> validate(%{})
-      |> search(%{})
+      |> search_result("octocat")
     }
   end
-
-  def render(assigns) do
-    ~H"""
-    <div>
- 	    <.form
-		    let={f}
-		    for={@changeset},
-		    id="search-form"
-        as = "username" 
-		    phx-change="validate"
-        phx-submit="search">   
-      
-        <%= text_input f, :username, phx_debounce: "blur" %>
-        <%= error_tag f, :username %>
-
-        <%= submit "Search", phx_disable_with: "Searching..." %>
-      </.form>
-    </div>
-
-    <pre>
-      <%= inspect @changeset %>
-      <%= inspect @username %>
-    </pre>
-    """
-  end
-
+ 
   def handle_event("validate", %{"username" => username}, socket) do
     { :noreply, validate(socket, username) }
   end
 
-  def handle_event("search", %{"username" => username}, socket) do
-    { :noreply, search(socket, username)}
+  def handle_event("search", %{"username" => %{"username" => username}}, socket) do
+    { :noreply, search_result(socket, username)}
   end
 
   def validate(socket, username) do
@@ -49,8 +24,27 @@ defmodule UserSearchWeb.SearchLive do
     |> assign(:changeset, SearchQuery.validate(username))
   end
 
-  def search(socket, username) do
+  def search_result(socket, username) do
     socket
     |> assign(:username, username)
+    |> set_dev_profile(Devfinder.find_dev(username))
+  end
+
+  defp set_dev_profile(socket, %{error: "Not Found"}) do
+    socket
+    |> put_flash(:info, "No results")
+    |> assign(:dev_profile, %{})
+  end
+
+  defp set_dev_profile(socket, %{error: message}) do
+    socket
+    |> put_flash(:info, "Error fetching results")
+    |> assign(:dev_profile, %{})
+  end
+
+  defp set_dev_profile(socket, profile) do
+    socket
+    |> clear_flash()
+    |> assign(:dev_profile, profile)
   end
 end

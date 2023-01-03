@@ -2,6 +2,7 @@ defmodule Devfinder.Core.Dev do
   @behaviour Devfinder.Core.ApiClientBehaviour 
 
   alias Finch.Response
+  require Logger
 
   @base_url "https://api.github.com/users/"
 
@@ -17,10 +18,11 @@ defmodule Devfinder.Core.Dev do
     following: integer,
     twitter_username: String.t,
     blog: String.t,
-    company: String.t
+    company: String.t, 
+    location: String.t
   }
 
-  defstruct ~w[avatar_url name login html_url created_at bio public_repos followers following twitter_username blog company]a
+  defstruct ~w[avatar_url name login html_url created_at bio public_repos followers following twitter_username blog company location]a
 
   @spec find_dev(String.t) :: { :ok, t} | {:error, String.t}
   def find_dev(username) do
@@ -52,7 +54,12 @@ defmodule Devfinder.Core.Dev do
 
     { :error, message }
   end
+  
+  defp handle_response({:error, reason}) do
+    Logger.error("Error #{inspect reason} has occured")
 
+    { :error, reason}
+  end
 
   defp parse_body(body) do
     body |> Jason.decode!()
