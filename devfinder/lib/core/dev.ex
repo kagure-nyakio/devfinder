@@ -7,6 +7,7 @@ defmodule Devfinder.Core.Dev do
   @base_url "https://api.github.com/users/"
 
   @type t :: %__MODULE__{
+    id: integer,
     avatar_url: String.t,
     name: String.t,
     login: String.t,
@@ -22,7 +23,7 @@ defmodule Devfinder.Core.Dev do
     location: String.t
   }
 
-  defstruct ~w[avatar_url name login html_url created_at bio public_repos followers following twitter_username blog company location]a
+  defstruct ~w[id avatar_url name login html_url created_at bio public_repos followers following twitter_username blog company location]a
 
   @spec find_dev(String.t) :: { :ok, t} | {:error, String.t}
   def find_dev(username) do

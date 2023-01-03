@@ -7,6 +7,7 @@ defmodule DevfinderCoreTest do
   @resp { 
    :ok,
    %Devfinder.Core.Dev{
+    id: 98824439, 
     avatar_url: "https://avatars.githubusercontent.com/u/98824439?v=4",
     bio: "I am a developer who really enjoys puzzles and having fun solving everyday problems.",
     blog: "",
@@ -17,8 +18,9 @@ defmodule DevfinderCoreTest do
     html_url: "https://github.com/kagure-nyakio",
     login: "kagure-nyakio",
     name: "Nyakio Muriuki J",
-    public_repos: 36,
-    twitter_username: "nyakio_muriuki"
+    public_repos: 37,
+    twitter_username: "nyakio_muriuki",
+    location: "Nairobi | Kenya",
  }}
 
   @error_resp {:error, "Not Found"}
