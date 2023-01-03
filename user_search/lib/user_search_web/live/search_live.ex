@@ -1,6 +1,7 @@
 defmodule UserSearchWeb.SearchLive do
   use UserSearchWeb, :live_view
 
+  alias UserSearch.Profile
   alias UserSearchWeb.SearchQuery 
 
   def mount(_params, _session, socket) do
@@ -15,8 +16,9 @@ defmodule UserSearchWeb.SearchLive do
     { :noreply, validate(socket, username) }
   end
 
-  def handle_event("search", %{"username" => %{"username" => username}}, socket) do
-    { :noreply, search_result(socket, username)}
+ def handle_event("search", %{"username" => %{"username" => username}}, socket) do
+
+   { :noreply, search_result(socket, username)}
   end
 
   def validate(socket, username) do
@@ -27,24 +29,18 @@ defmodule UserSearchWeb.SearchLive do
   def search_result(socket, username) do
     socket
     |> assign(:username, username)
-    |> set_dev_profile(Devfinder.find_dev(username))
+    |> get_profile(Profile.get_dev_profile(username))
   end
 
-  defp set_dev_profile(socket, %{error: "Not Found"}) do
+  # TODO: fix error tag to use changeset and handling and dev_info not found 
+  defp get_profile(socket,  {:error, changeset} ) do
     socket
-    |> put_flash(:info, "No results")
-    |> assign(:dev_profile, %{})
+    |> assign(:errors, ["not found"])
   end
 
-  defp set_dev_profile(socket, %{error: message}) do
+  defp get_profile(socket, {:ok, profile}) do
     socket
-    |> put_flash(:info, "Error fetching results")
-    |> assign(:dev_profile, %{})
-  end
-
-  defp set_dev_profile(socket, profile) do
-    socket
-    |> clear_flash()
     |> assign(:dev_profile, profile)
+    |> assign(:errors, [])
   end
-end
+ end
