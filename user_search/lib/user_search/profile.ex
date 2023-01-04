@@ -95,7 +95,6 @@ defmodule UserSearch.Profile do
 
     changeset
       |> put_change(:created_at, date)
-
   end
 
   defp alt_text(changeset, field) when field in [:bio] do

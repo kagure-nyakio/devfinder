@@ -18,8 +18,7 @@ defmodule UserSearchWeb.SearchLive do
   end
 
  def handle_event("search", %{"username" => %{"username" => username}}, socket) do
-
-   { :noreply, search_result(socket, username)}
+    { :noreply, search_result(socket, username) }
   end
 
   def validate(socket, username) do
@@ -34,14 +33,14 @@ defmodule UserSearchWeb.SearchLive do
   end
 
   defp get_profile(socket) do
-    profile =
-      socket.assigns.username
-      |> Profile.get_dev_profile
-      |> process_profile(socket)
+    username = socket.assigns.username
+
+    username
+    |> Profile.get_dev_profile
+    |> process_profile(socket)
   end
 
   defp process_profile({:ok, profile}, socket) do
-    IO.puts "#{inspect(profile)}"
     socket
     |> assign(:dev_profile, profile)
   end
