@@ -32,7 +32,7 @@ defmodule UserSearchWeb.SearchLive do
     |> get_profile(Profile.get_dev_profile(username))
   end
 
-  # TODO: fix error tag to use changeset and handling and dev_info not found 
+  # TODO: fix error tag(maybe use existing changeset tags) to use changeset and handling and dev_info not found 
   defp get_profile(socket,  {:error, changeset} ) do
     socket
     |> assign(:errors, ["not found"])
