@@ -41,13 +41,13 @@ defmodule UserSearch.Profile do
   def validate_profile_changeset(%{error: "Not Found"} = attrs) do
     %__MODULE__{}
     |> change(attrs)
-    |> add_error(:err, "Not Found")
+    |> add_error(:username, "No Result")
   end
 
   def validate_profile_changeset(%{error: _message} = attrs) do
     %__MODULE__{}
     |> change(attrs)
-    |> add_error(:err, "Internal Server Error")
+    |> add_error(:username, "Internal Server Error")
   end
 
   def validate_profile_changeset(attrs) do
@@ -65,10 +65,12 @@ defmodule UserSearch.Profile do
       |> validate_profile_changeset
 
     if changeset.valid? do
+       # get modified profile struct from changeset or
       profile = apply_changes(changeset)
       { :ok, profile }
     else
-      changeset = %{ changeset | action: :profile_not_found }
+      # annotate action I tried to perform to for UI to show errorss
+      changeset = %{ changeset | action: :find_dev }
 
       { :error, changeset }
     end

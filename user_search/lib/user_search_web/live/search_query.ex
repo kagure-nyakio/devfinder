@@ -3,10 +3,10 @@ defmodule UserSearchWeb.SearchQuery do
 
   import Ecto.Changeset
 
-  def validate(params) do
+  def validate_username(params) do
     {%{}, @types}
     |> cast(params, Map.keys(@types))
     |> validate_required([:username])
-    |> Map.put(:action, :validate)
+    |> Map.put(:action, :username)
   end
 end
