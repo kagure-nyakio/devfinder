@@ -38,14 +38,12 @@ defmodule UserSearch.Profile do
    field :error
   end
 
-  # add_error to changeset, changes remain empty
   def validate_profile_changeset(%{error: "Not Found"} = attrs) do
     %__MODULE__{}
     |> change(attrs)
     |> add_error(:err, "Not Found")
   end
 
-  # log error messages, inform user of internal server errors
   def validate_profile_changeset(%{error: _message} = attrs) do
     %__MODULE__{}
     |> change(attrs)
