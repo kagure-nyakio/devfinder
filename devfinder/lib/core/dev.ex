@@ -1,13 +1,29 @@
 defmodule Devfinder.Core.Dev do
-  @behaviour Devfinder.Core.ApiClientBehaviour 
+  @behaviour Devfinder.Core.ApiClientBehaviour
 
   alias Finch.Response
+  alias Devfinder.Type
   require Logger
+
+  @months %{
+    "01" => "Jan",
+    "02" => "Feb",
+    "03" => "Mar",
+    "04" => "Apr",
+    "05" => "May",
+    "06" => "Jun",
+    "07" => "Jul",
+    "08" => "Aug",
+    "09" => "Sep",
+    "10" => "Oct",
+    "11" => "Nov",
+    "12" => "Dec"
+  }
+
 
   @base_url "https://api.github.com/users/"
 
   @type t :: %__MODULE__{
-    id: integer,
     avatar_url: String.t,
     name: String.t,
     login: String.t,
@@ -19,17 +35,18 @@ defmodule Devfinder.Core.Dev do
     following: integer,
     twitter_username: String.t,
     blog: String.t,
-    company: String.t, 
+    company: String.t,
     location: String.t
   }
 
   defstruct ~w[id avatar_url name login html_url created_at bio public_repos followers following twitter_username blog company location]a
 
-  @spec find_dev(String.t) :: { :ok, t} | {:error, String.t}
+  @spec find_dev(String.t) :: { :ok, Type.dev_profile } | {:error, Type.error}
   def find_dev(username) do
     username
     |> request_dev_info
     |> handle_response
+    |> profile
   end
 
   defp request_dev_info(username) do
@@ -43,10 +60,10 @@ defmodule Devfinder.Core.Dev do
       body
       |> parse_body
       |> filter_info
-   
+
     { :ok, response }
   end
-  
+
   defp handle_response({:ok, %Response{body: body, status: status}}) when status > 400 do
     message =
       body
@@ -55,7 +72,7 @@ defmodule Devfinder.Core.Dev do
 
     { :error, message }
   end
-  
+
   defp handle_response({:error, reason}) do
     Logger.error("Error #{inspect reason} has occured")
 
@@ -76,5 +93,46 @@ defmodule Devfinder.Core.Dev do
         end
       end)
   end
+
+
+###########################################################################
+@spec profile({:ok, t}) :: Type.dev_profile | Type.error
+def profile({:ok, resp}) do
+    %{
+      avatar_url: resp.avatar_url,
+      name: parse_empty_values(resp.name, "#{resp.login}"),
+      login: resp.login,
+      html_url: resp.html_url,
+      created_at: parse_date(resp.created_at),
+      bio: parse_empty_values(resp.bio, "This profile has no bio"),
+      public_repos: resp.public_repos,
+      followers: resp.followers,
+      following: resp.following,
+      twitter_username: parse_empty_values(resp.twitter_username, "Not Available"),
+      blog: parse_empty_values(resp.blog, "Not Available"),
+      company: parse_empty_values(resp.company, "Not Available"),
+      location: parse_empty_values(resp.location, "Not Available")
+  }
 end
 
+def profile({:error, message}) do
+  %{ error: message }
+end
+
+
+defp parse_date(str_date) do
+  [date, _time] =
+    str_date
+    |> String.split("T")
+
+  [year, month, date] = date |> String.split("-")
+
+  [year, @months[month], date]
+  |> Enum.reverse
+  |> Enum.join(" ")
+end
+
+  defp parse_empty_values(value, message) when is_nil(value) or value == "", do: message
+
+  defp parse_empty_values(value, _message), do: value
+end

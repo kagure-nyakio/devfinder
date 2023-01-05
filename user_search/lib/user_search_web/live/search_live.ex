@@ -1,7 +1,6 @@
 defmodule UserSearchWeb.SearchLive do
   use UserSearchWeb, :live_view
 
-  alias UserSearch.Profile
   alias UserSearchWeb.SearchQuery
 
   def mount(_params, _session, socket) do
@@ -33,21 +32,26 @@ defmodule UserSearchWeb.SearchLive do
   end
 
   defp get_profile(socket) do
+
     username = socket.assigns.username
 
     username
-    |> Profile.get_dev_profile
+    |> Devfinder.find_dev
     |> process_profile(socket)
   end
 
-  defp process_profile({:ok, profile}, socket) do
-    socket
-    |> assign(:dev_profile, profile)
+  defp process_profile(%{error: message}, socket) do
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.add_error(:find_dev, message)
+
+      socket
+    |> assign(:changeset, changeset)
   end
 
-  defp process_profile({:error, changeset}, socket) do
+  defp process_profile(profile, socket) do
     socket
-    |> assign(:changeset, changeset)
+    |> assign(:dev_profile, profile)
   end
 
  end

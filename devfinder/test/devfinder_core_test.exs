@@ -4,31 +4,28 @@ defmodule DevfinderCoreTest do
 
   alias Devfinder.Core.Dev
 
-  @resp { 
-   :ok,
-   %Devfinder.Core.Dev{
-    id: 98824439, 
+  @resp %{
     avatar_url: "https://avatars.githubusercontent.com/u/98824439?v=4",
     bio: "I am a developer who really enjoys puzzles and having fun solving everyday problems.",
-    blog: "",
-    company: nil,
-    created_at: "2022-02-01T13:52:24Z",
+    blog: "Not Available",
+    company: "Not Available",
+    created_at: "01 Feb 2022",
     followers: 0,
     following: 3,
     html_url: "https://github.com/kagure-nyakio",
     login: "kagure-nyakio",
     name: "Nyakio Muriuki J",
-    public_repos: 37,
+    public_repos: 38,
     twitter_username: "nyakio_muriuki",
     location: "Nairobi | Kenya",
- }}
+ }
 
-  @error_resp {:error, "Not Found"}
-  
+  @error_resp %{ error: "Not Found"}
+
   describe "find_dev/1" do
     test "successfully fetches developer's information given a username" do
       ApiClientBehaviourMock
-      |> expect(:find_dev, fn _url -> 
+      |> expect(:find_dev, fn _url ->
         {
           :ok,
           %Finch.Response{
@@ -53,4 +50,3 @@ defmodule DevfinderCoreTest do
     end
   end
 end
-

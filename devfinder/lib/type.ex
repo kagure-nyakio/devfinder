@@ -15,6 +15,5 @@ defmodule Devfinder.Type do
     location: String.t
   }
 
-  @type github_error :: %{ error: String.t }
+  @type error :: %{ error: String.t }
 end
-

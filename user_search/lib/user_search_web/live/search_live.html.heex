@@ -8,9 +8,10 @@
       phx-submit="search">   
       
       <%= text_input f, :username, phx_debounce: "blur" %>
-      <%= error_tag f, :username %>
+      <%= error_tag  f, :username %>
 
       <%= submit "Search", phx_disable_with: "Searching..." %>
+			<%= error_tag  f, :find_dev %>
     </.form>
 </div>
 
@@ -45,5 +46,7 @@
 			<p><%= @dev_profile.company %></p>
 		</div>
 	</div>
+
 </div>
+
 
