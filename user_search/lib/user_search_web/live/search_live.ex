@@ -40,14 +40,24 @@ defmodule UserSearchWeb.SearchLive do
     |> process_profile(socket)
   end
 
-  defp process_profile(%{error: message}, socket) do
+  defp process_profile(%{error: "Not Found"}, socket) do
     changeset =
       socket.assigns.changeset
-      |> Ecto.Changeset.add_error(:find_dev, message)
+      |> Ecto.Changeset.add_error(:find_dev, "No Result")
 
       socket
     |> assign(:changeset, changeset)
   end
+
+  defp process_profile(%{error: message}, socket) do
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.add_error(:find_dev, "Internal Server Error")
+
+      socket
+    |> assign(:changeset, changeset)
+  end
+
 
   defp process_profile(profile, socket) do
     socket

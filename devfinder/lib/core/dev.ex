@@ -41,7 +41,7 @@ defmodule Devfinder.Core.Dev do
 
   defstruct ~w[id avatar_url name login html_url created_at bio public_repos followers following twitter_username blog company location]a
 
-  @spec find_dev(String.t) :: { :ok, Type.dev_profile } | {:error, Type.error}
+  @spec find_dev(String.t) :: Type.dev_profile | Type.error
   def find_dev(username) do
     username
     |> request_dev_info
